@@ -10,6 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using EntityFrameworkCoreRelationSample.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EntityFrameworkCoreRelationSample
 {
@@ -26,6 +28,10 @@ namespace EntityFrameworkCoreRelationSample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+                        //この行を追加
+            services.AddDbContext<BlogContext>(options=> options.UseSqlite(
+                Configuration.GetConnectionString("BlogContext")
+            ));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
