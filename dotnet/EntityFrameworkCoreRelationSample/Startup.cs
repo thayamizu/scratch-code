@@ -28,10 +28,12 @@ namespace EntityFrameworkCoreRelationSample
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-                        //この行を追加
-            services.AddDbContext<BlogContext>(options=> options.UseSqlite(
+            System.Console.WriteLine("configure service");
+            //この行を追加
+            services.AddDbContext<BlogContext>(options => options.UseSqlite(
                 Configuration.GetConnectionString("BlogContext")
             ));
+            System.Console.WriteLine("configure service");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,7 +44,7 @@ namespace EntityFrameworkCoreRelationSample
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
 
             app.UseRouting();
 

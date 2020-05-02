@@ -16,7 +16,7 @@ namespace EntityFrameworkCoreRelationSample.Controllers
         /// 
         /// </summary>
         private readonly EntityFrameworkCoreRelationSample.Models.BlogContext _context;
-        
+
         /// <summary>
         /// ロガー
         /// </summary>
@@ -38,11 +38,18 @@ namespace EntityFrameworkCoreRelationSample.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<Models.Blog> Get()
+        public IEnumerable<dynamic> Get()
         {
-            List<Models.Blog> lists = _context.Blog
-                    .Where(e=>e.isActive==true)
-                    .ToList();
+            var lists = from blog in _context.Blog
+                        join post in _context.Post
+                        on blog.Id equals post.BlogId into temp
+                        from selects in temp.DefaultIfEmpty()
+                        select new
+                        {
+                            BlogId = blog.Id,
+                            PostId = selects.Id,
+                            Contents = selects.Contents
+                        };
 
             return lists;
         }

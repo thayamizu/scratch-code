@@ -174,5 +174,26 @@ $dotnet ef database update
 
 ![](images/03.png)
 
-- コントローラーを修正してデータを取ってくるようにする(TODO)
+- BlogControllerを作成して、`Blog`と`Posts`をJoinしてデータを取ってくるようにする
+- Join句はLinqで書けるので今回はLinqで書いた
+  - データベースの取得結果の匿名構造体をインタフェースに書くのが面倒だったのでdynamicを指定しているがきちんとinterfaceを書くべきだと思われる。
+
+```cs
+[HttpGet]
+public IEnumerable<dynamic> Get()
+{
+    var lists = from blog in _context.Blog
+                join post in _context.Post
+                on blog.Id equals post.BlogId into temp
+                from selects in temp.DefaultIfEmpty()
+                select new
+                {
+                    BlogId = blog.Id,
+                    PostId = selects.Id,
+                    Contents = selects.Contents
+                };
+
+    return lists;
+}
+```
 
